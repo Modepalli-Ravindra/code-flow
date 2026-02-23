@@ -37,7 +37,6 @@ export function connectWS() {
         };
 
         wsInstance.onerror = (err) => {
-            // Log less aggressively to avoid console noise in production
             console.warn('WS Connection Issue: Ensure your backend server is running and reachable.');
         };
 
@@ -73,34 +72,36 @@ export function connectWS() {
             }
         };
     } catch (e) {
-
-        return wsInstance;
+        console.error('Failed to create WebSocket instance:', e);
     }
 
-    export function sendMessage(payload) {
-        if (!wsInstance || wsInstance.readyState !== WebSocket.OPEN) {
-            console.warn('WS not connected, reconnecting...');
-            connectWS();
-            setTimeout(() => {
-                if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-                    wsInstance.send(JSON.stringify(payload));
-                }
-            }, 500);
-            return;
-        }
-        wsInstance.send(JSON.stringify(payload));
-    }
+    return wsInstance;
+}
 
-    export function runCode(code, inputs = [], speed = 600, language = 'javascript') {
+export function sendMessage(payload) {
+    if (!wsInstance || wsInstance.readyState !== WebSocket.OPEN) {
+        console.warn('WS not connected, reconnecting...');
         connectWS();
         setTimeout(() => {
-            sendMessage({ type: 'RUN', code, inputs, speed, language });
-        }, wsInstance?.readyState === WebSocket.OPEN ? 0 : 600);
+            if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+                wsInstance.send(JSON.stringify(payload));
+            }
+        }, 500);
+        return;
     }
+    wsInstance.send(JSON.stringify(payload));
+}
 
-    export function stepForward() { sendMessage({ type: 'STEP_FORWARD' }); }
-    export function stepBack() { sendMessage({ type: 'STEP_BACK' }); }
-    export function pauseExecution() { sendMessage({ type: 'PAUSE' }); }
-    export function resumeExecution(speed) { sendMessage({ type: 'RESUME', speed }); }
-    export function resetExecution() { sendMessage({ type: 'RESET' }); }
-    export function jumpToStep(index) { sendMessage({ type: 'JUMP', index }); }
+export function runCode(code, inputs = [], speed = 600, language = 'javascript') {
+    connectWS();
+    setTimeout(() => {
+        sendMessage({ type: 'RUN', code, inputs, speed, language });
+    }, wsInstance?.readyState === WebSocket.OPEN ? 0 : 600);
+}
+
+export function stepForward() { sendMessage({ type: 'STEP_FORWARD' }); }
+export function stepBack() { sendMessage({ type: 'STEP_BACK' }); }
+export function pauseExecution() { sendMessage({ type: 'PAUSE' }); }
+export function resumeExecution(speed) { sendMessage({ type: 'RESUME', speed }); }
+export function resetExecution() { sendMessage({ type: 'RESET' }); }
+export function jumpToStep(index) { sendMessage({ type: 'JUMP', index }); }
