@@ -8,6 +8,7 @@ import CodeExplainer from '../components/CodeExplainer';
 import MemoryPanel from '../components/MemoryPanel';
 import StackViewer from '../components/StackViewer';
 import TimelineScrubber from '../components/TimelineScrubber';
+import ConnectionBanner from '../components/ConnectionBanner';
 import useExecutionStore from '../store/executionStore';
 import { connectWS } from '../services/websocket';
 
@@ -38,6 +39,7 @@ export default function Playground() {
             background: 'var(--bg-void)', overflow: 'hidden'
         }}>
             <ControlBar />
+            <ConnectionBanner />
 
             {/* Layout: | Editor+Explainer (Left) | FlowChart (Center) | Trace+Console (Right) | */}
             <div className="main-container">
