@@ -5,7 +5,6 @@ import FlowChart from '../components/FlowChart';
 import ExecutionTrace from '../components/ExecutionTrace';
 import ConsoleOutput from '../components/ConsoleOutput';
 import CodeExplainer from '../components/CodeExplainer';
-import MemoryPanel from '../components/MemoryPanel';
 import StackViewer from '../components/StackViewer';
 import TimelineScrubber from '../components/TimelineScrubber';
 import ConnectionBanner from '../components/ConnectionBanner';
@@ -110,13 +109,8 @@ export default function Playground() {
 
                 {/* ── Column 3: State & History (Right) ────────────────────── */}
                 <div className="area-right" style={{ gap: 12 }}>
-                    {/* Variables Panel */}
-                    <div className="glass" style={{ flex: '0 0 35%', borderRadius: 12, overflow: 'hidden' }}>
-                        <MemoryPanel />
-                    </div>
-
                     {/* Stack & Loops Panel */}
-                    <div className="glass" style={{ flex: '0 0 30%', borderRadius: 12, overflow: 'hidden' }}>
+                    <div className="glass" style={{ flex: '0 0 45%', borderRadius: 12, overflow: 'hidden' }}>
                         <StackViewer />
                     </div>
 
